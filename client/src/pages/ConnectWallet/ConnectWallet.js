@@ -21,23 +21,32 @@ const ConnectWallet = () => {
   const [isConnecting, setIsConnecting] = useState(false);
 
   const handleSuccess = async (address) => {
-    setLocalWalletAddress(address);
-    setWalletAddress(address);
+    try {
+      setLocalWalletAddress(address);
+      setWalletAddress(address);
 
-    const gameId = query.get('gameId');
-    const username = query.get('username');
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const signer = provider.getSigner();
+      const signature = await signer.signMessage('This is a test');
 
-    if (socket && socket.connected && gameId && username) {
-      socket.emit(CS_FETCH_LOBBY_INFO, {
-        walletAddress: address,
-        socketId: socket.id,
-        gameId,
-        username,
-      });
+      console.log('Signed message:', signature);
+
+      const gameId = query.get('gameId');
+      const username = query.get('username');
+
+      if (socket && socket.connected && gameId && username) {
+        socket.emit(CS_FETCH_LOBBY_INFO, {
+          walletAddress: address,
+          socketId: socket.id,
+          gameId,
+          username,
+        });
+      }
 
       navigate('/play');
-    } else {
-      console.warn('Missing socket connection or query params');
+    } catch (err) {
+      console.error('❌ Message signing failed:', err);
+      Swal.fire('Error', 'Message signing failed.', 'error');
     }
   };
 
@@ -101,25 +110,24 @@ const ConnectWallet = () => {
 
   return (
     <div className='connect-wallet-page'>
-      {isConnecting && <LoadingScreen />}
-
-      {!walletAddress && !isConnecting && (
-        <div className='wallet-connect-container'>
-          <button
-            onClick={connectMetaMask}
-            className='wallet-connect-button metamask'
-          >
-            Connect MetaMask Wallet
-          </button>
-
-          <button
-            onClick={connectEthereumWallet}
-            className='wallet-connect-button ethereum'
-          >
-            Connect Ethereum Wallet
-          </button>
-        </div>
-      )}
+      <LoadingScreen>
+        {!walletAddress && (
+          <div className='wallet-connect-container'>
+            <button
+              onClick={connectMetaMask}
+              className='wallet-connect-button metamask'
+            >
+              Connect MetaMask Wallet
+            </button>
+            <button
+              onClick={connectEthereumWallet}
+              className='wallet-connect-button ethereum'
+            >
+              Connect Ethereum Wallet
+            </button>
+          </div>
+        )}
+      </LoadingScreen>
 
       {walletAddress && (
         <div className='connected-info'>

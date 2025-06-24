@@ -1,7 +1,7 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Loader from './Loader';
-import loadingImage from './../../assets/game/loading-background.jpg'
+import loadingImage from './../../assets/game/loading-background.jpg';
 
 const StyledLoadingScreen = styled.div`
   width: 100%;
@@ -14,12 +14,12 @@ const StyledLoadingScreen = styled.div`
   background-attachment: fixed;
   display: flex;
   justify-content: center;
-
 `;
 
-const LoadingScreen = () => (
+const LoadingScreen = ({ children }) => (
   <StyledLoadingScreen>
     <Loader />
+    {children && <div className='wallet-buttons-container'>{children}</div>}
   </StyledLoadingScreen>
 );
 
