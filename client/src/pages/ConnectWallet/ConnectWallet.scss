@@ -1,6 +1,37 @@
-.connect-wallet-area{
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.connect-wallet-area {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wallet-connect-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 100px;
+
+  .wallet-connect-button {
+    padding: 1rem 2rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+
+    &.metamask {
+      background-color: #f6851b;
+      &:hover {
+        background-color: #e2761b;
+      }
+    }
+
+    &.ethereum {
+      background-color: #4a90e2;
+      &:hover {
+        background-color: #357ae8;
+      }
+    }
+  }
 }
